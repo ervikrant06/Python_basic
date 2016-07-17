@@ -76,3 +76,22 @@ value3,value2,value1
 8,5,2
 9,6,3
 
+
+## Adding one more dictionary example.
+
+>>> dict1
+{1: ['Spices', 37.0], 2: ['Other stuff', 21.0], 3: ['Tea', 43.0], 5: ['Fruit', 6.0], 6: ['Textiles', 39.0], 10: 
+['Contraband', 992.0]}
+>>> print "{:<8} {:<15} {:<10}".format('Key','Label','Number')
+Key      Label           Number    
+>>> for k, v in dict1.iteritems():
+...     label, num = v
+...     print "{:<8} {:<15} {:<10}".format(k, label, num)
+...     
+... 
+1        Spices          37.0      
+2        Other stuff     21.0      
+3        Tea             43.0      
+5        Fruit           6.0       
+6        Textiles        39.0      
+10       Contraband      992.0   
