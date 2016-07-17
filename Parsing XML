@@ -1,0 +1,37 @@
+#!/usr/bin/python
+'''
+Importing element tree from xml.etree
+'''
+import xml.etree.ElementTree as ET
+'''
+Import dictionary which will be having values as list
+'''
+from collections import defaultdict
+d = defaultdict(list)
+
+'''
+Loop to pring the name, instance id, memory, and vcpu count of the instances.
+Instances dumpxml files are provided as input files.
+Creating dictionary in which searched parameter will be the keys and values are instance specific information 
+'''
+for i in ('name', 'uuid', 'memory', 'vcpu'):
+    for j in ('domain1.xml', 'domain2.xml', 'domain3.xml'):
+        tree = ET.parse(j)
+        root = tree.getroot()
+        for child in root.iter(i):
+            d[child.tag].append(child.text)
+'''
+Printing the collected dictionary
+'''
+for row in zip(*([k] + d[k] for k in sorted(d))):
+        print(row)
+
+
+
+###### Output ######
+
+
+('memory', 'name', 'uuid', 'vcpu')
+('6242304', 'allinone-7', '63d91bd8-bcb1-477b-ba44-9202f0d7dca5', '4')
+('4194304', 'allinone8', '11a15484-4f0e-41c3-afab-bab212a54fb1', '4')
+('5218304', 'allinone7', '0cb0309e-e58b-4d75-9d2e-9269ab5b3f9c', '4')
