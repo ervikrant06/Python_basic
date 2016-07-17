@@ -1,0 +1,27 @@
+Sample list : 
+
+>>> table_data
+[['a', 'b', 'c'], ['aaaaaaaaaa', 'b', 'c'], ['a', 'bbbbbbbbbb', 'c']]
+
+## Best and easiest way to pring the nested lists without much efforts.
+
+>>> for row in table_data:
+...     print ("{:<20} {:<20} {:<20}".format(*row))
+...     
+... 
+a                    b                    c                   
+aaaaaaaaaa           b                    c                   
+a                    bbbbbbbbbb           c  
+
+## Counting the longest value in nested list and then adjusting the output width accordingly.
+
+>>> col_width = max(len(word) for row in data for word in row) + 2
+>>> col_width
+12
+>>> for row in data:
+...     print "".join(word.ljust(col_width) for word in row)
+...     
+... 
+a           b           c           
+aaaaaaaaaa  b           c           
+a           bbbbbbbbbb  c  
