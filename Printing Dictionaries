@@ -1,0 +1,78 @@
+>>> d = {'value1' : ['1', '2', '3'], 'value2' : ['4','5','6'], 'value3': ['7','8','9']}
+>>> d
+{'value3': ['7', '8', '9'], 'value2': ['4', '5', '6'], 'value1': ['1', '2', '3']}
+
+## Printing key and values separately.
+
+>>> d.keys()
+['value3', 'value2', 'value1']
+>>> d.values()
+[['7', '8', '9'], ['4', '5', '6'], ['1', '2', '3']]
+
+## Printing key and values in simple form 
+
+>>> for key,value in d.items():
+...     print key, value
+...     
+... 
+value3 ['7', '8', '9']
+value2 ['4', '5', '6']
+value1 ['1', '2', '3']
+
+## Printing key and value in sorted way - Here sorting using key 
+
+>>> for key in sorted(d.keys()):
+...     print key, d[key]
+...     
+... 
+value1 ['1', '2', '3']
+value2 ['4', '5', '6']
+value3 ['7', '8', '9']
+
+## Printing only values
+
+>>> for value in d.keys():
+...     print d[value]
+...     
+... 
+['7', '8', '9']
+['4', '5', '6']
+['1', '2', '3']
+
+## Zipping the values of dictionary
+
+>>> zip(d.values())
+[(['7', '8', '9'],), (['4', '5', '6'],), (['1', '2', '3'],)]
+
+>>> zip(*(d.values()))
+[('7', '4', '1'), ('8', '5', '2'), ('9', '6', '3')]
+
+In immediate above it's taking the first value of each key.
+
+Basically we can have output like below which will use the keys as columns and values as rows.
+
+>>> for row in zip(*([k] + d[k] for k in sorted(d))):
+...         print(row)
+... 
+('value1', 'value2', 'value3')
+('1', '4', '7')
+('2', '5', '8')
+('3', '6', '9')
+
+## Printing keys and column and values as row in csv format.
+
+>>> with open("test.csv", "w") as f:
+...     f.write(",".join(d.keys()) + "\n")
+...     for row in zip(*d.values()):
+...         f.write(",".join(str(n) for n in row) + "\n")
+...         
+...     f.close()
+...     
+Output like below : 
+
+cat /home/vaggarwa/test.csv 
+value3,value2,value1
+7,4,1
+8,5,2
+9,6,3
+
