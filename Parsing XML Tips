@@ -1,0 +1,93 @@
+## Mainly to get the information from virsh dumpxml output 
+
+SYNTAX COMMON FOR ALL EXAMPLES :
+
+from xml.etree import ElementTree
+document = ElementTree.parse('domain1.xml')
+root = document.getroot()
+
+## To print all the immediate child of root along with the attribute information of each immediate child.
+## Note : This one is not nested 
+
+for child in root:
+    print child.tag, child.attrib
+
+Ouptut : 
+
+name {}
+uuid {}
+memory {'unit': 'KiB'}
+currentMemory {'unit': 'KiB'}
+vcpu {'placement': 'static'}
+os {}
+features {}
+cpu {'mode': 'custom', 'match': 'exact'}
+clock {'offset': 'utc'}
+on_poweroff {}
+on_reboot {}
+on_crash {}
+pm {}
+devices {}
+
+## Printing the particular xml tag from anywhere in file without using path
+
+Ex 1 : 
+
+for child in root.iter('type'):
+    print child.attrib
+    
+Output : 
+{'machine': 'pc-i440fx-rhel7.0.0', 'arch': 'x86_64'}
+
+Ex 2 : Printing all MAC addresses for xml file.
+
+for child in root.iter('mac'):
+    print child.attrib
+    
+Output :
+
+{'address': '52:54:00:00:c2:df'}
+
+Ex 3 : Modifying example 2 to pring only MAC address value.
+
+for child in root.iter('mac'):
+    print child.attrib['address']
+    
+Output:
+
+52:54:00:00:c2:df
+
+Ex 4 : To pring the UUID information of domain.
+
+for child in root.iter('uuid'):
+    print child.text
+
+Output : 
+
+63d91bd8-bcb1-477b-ba44-9202f0d7dca5
+    
+## Printing specific attribute using for loop.
+
+Input : 
+
+  <devices>
+    <interface type='network'>
+      <mac address='52:54:00:89:a8:9b'/>
+      <source network='default' bridge='virbr0'/>
+      <target dev='vnet0'/>
+      <model type='virtio'/>
+      <alias name='net0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </interface>
+  </devices>
+
+Logic : 
+
+for interfaces in root.findall('devices/interface'):
+    for parameters in interfaces.getchildren():
+        if parameters.tag == 'address':
+            print parameters.attrib['domain']
+
+Output : 
+
+0x0000
