@@ -1,0 +1,26 @@
+#!/usr/bin/python
+
+from subprocess import Popen, PIPE
+'''
+Capturing the df -Ph output information in filesysteminfo
+'''
+filesysteminfo = Popen(['df','-Ph'], stdout=PIPE)
+'''
+filtering the actual filesystems from the df output skipping the temporary filesystem. Actual filesystems always
+starts with "/" and then splitting the collected lines, splitting the first element [0] with "/"
+and calculating the length of it.
+'''
+for eachrow in iter(filesysteminfo.stdout.readline, b''):
+    if eachrow.startswith('/'):
+        splitting = eachrow.split()
+        if (len(splitting[0].split('/')) >= 4):
+            print "Filesystem {} is created on VG-LV setup".format(splitting[0])
+        else:
+            print "Filesystem {} is not created on VG-LV setup".format(splitting[0])
+
+
+Output : 
+
+Filesystem /dev/mapper/RHEL7CSB-Root is created on VG-LV setup
+Filesystem /dev/mapper/RHEL7CSB-Home is created on VG-LV setup
+Filesystem /dev/sda1 is not created on VG-LV setup
