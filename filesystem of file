@@ -1,0 +1,61 @@
+## Identify from the path of file to which filesystem it belongs
+
+#!/usr/bin/python
+from subprocess import Popen, PIPE
+from sys import exit
+import os
+
+'''
+Creating empty lists for usage in code.
+'''
+
+filesystemlist = []
+filesystemlist1 = []
+filenamebreak = []
+
+'''
+Capturing the filesytem information in a list and returning that list to call function breaking in
+another variable.
+'''
+
+filesysteminfo = Popen(['df','-h'], stdout=PIPE)
+filesysteminfo.wait()
+
+def filesystemslist():
+    if filesysteminfo.returncode is 0:
+        for eachrow in iter(filesysteminfo.stdout.readline, b''):
+             filesystems = eachrow.split()[-1]
+             if filesystems.startswith("/"):
+                 filesystemlist.append(filesystems)
+        return filesystemlist
+
+'''
+Sorting the returned filesystem list according to length of each element of list in descending order.
+using while loop to dis-associate the filepath and then looking for the path in filesystem list.
+'''
+
+def breaking(filename):
+    filesystemlist1 = filesystemslist()
+    filesystemlist1.sort(key=len,reverse=True)
+    filenamebreak.append(filename)
+    while filename != "/":
+        filename = os.path.split(filename)[0]
+        filenamebreak.append(filename)
+    for i in filenamebreak:
+        if i in filesystemlist1:
+            print "***{}***".format(i)
+            print "File present in {} filesystem".format(i)
+            break
+
+'''
+Input provide the filename and calling breaking function.
+'''
+
+filename = raw_input ("Enter the full name of file : ")
+if filename.startswith("/"):
+    print "File name is valid"
+    print "Searching the name of filesystem in which file is present"
+    breaking(filename)
+else:
+    print "File name is not valid"
+    exit(2)
