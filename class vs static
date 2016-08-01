@@ -1,0 +1,31 @@
+Good explanation of classmethod vs staticmethod.
+
+http://stackoverflow.com/questions/12179271/python-classmethod-and-staticmethod-for-beginner
+
+class Date(object):
+
+    day = 0
+    month = 0
+    year = 0
+
+    def __init__(self, day=0, month=0, year=0):
+        self.day = day
+        self.month = month
+        self.year = year
+        
+    @classmethod
+    def from_string(cls, date_as_string):
+        day, month, year = map(int, date_as_string.split('-'))
+        date1 = cls(day, month, year)
+        return date1
+        
+    @staticmethod
+    def is_date_valid(date_as_string):
+        day, month, year = map(int, date_as_string.split('-'))
+        return day <= 31 and month <= 12 and year <= 3999
+        
+So, as we can see from usage of staticmethod, we don't have any access to what the class is- it's basically just a 
+function, called syntactically like a method, but without access to the object and it's internals (fields and another 
+methods), while classmethod does.        
+
+date2 = Date.from_string('11-09-2012')
