@@ -1,0 +1,24 @@
+## New feature of python 3 in inspect module.
+
+>>> _fields = ['name','shares','price']
+>>> from inspect import Parameter, Signature
+>>> parms = [ Parameter(fname, Parameter.POSITIONAL_OR_KEYWORD) for fname in _fields]
+>>> parms
+[<Parameter "name">, <Parameter "shares">, <Parameter "price">]
+>>> sig = Signature(parms)
+>>> print(sig)
+(name, shares, price)
+
+Binding the signature to arguments. 
+
+>>> def foo(*args,**kwargs):
+...     bound = sig.bind(*args,**kwargs)
+...     for name,val in bound.arguments.items():
+...         print(name,val)
+...         
+...     
+... 
+>>> foo(1,2,3)
+name 1
+shares 2
+price 3
