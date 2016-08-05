@@ -22,3 +22,10 @@ Binding the signature to arguments.
 name 1
 shares 2
 price 3
+
+## Also keyword arguments are working.
+
+>>> foo(1,2,price=3)
+name 1
+shares 2
+price 3
