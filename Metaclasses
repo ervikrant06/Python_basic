@@ -1,0 +1,87 @@
+## Showing some example of Metaclasses, 
+## Examples are taking from http://eli.thegreenplace.net/2011/08/14/python-metaclasses-by-example and David Beazley
+## video of metaprogramming.
+
+Ex 1 : Here we are using __call__ in metaclass. It's called when the already created class is called to create
+new object 
+
+Code : 
+
+class MyMeta(type):
+    ''' Define a new class'''
+    def __call__(cls, *args, **kwargs):
+        print('__call__ of ', str(cls))
+        print('__call *args=', str(args))
+        return type.__call__(cls,*args,**kwargs)
+
+class Myklass(metaclass=MyMeta):
+    ''' Use MyMeta class as metaclass for Mykclass'''
+    def __init__(self, a, b):
+        print('MyKlass object with a=%s, b=%s' % (a, b))
+
+print("gonna create foo now")
+foo = Myklass(1,2)
+
+Output : 
+
+$ python metaclass.py 
+gonna create foo now
+__call__ of  <class '__main__.Myklass'>
+__call *args= (1, 2)
+MyKlass object with a=1, b=2
+
+Ex 2 : Using __init__ and __new__ methods. __new__ should be implemented when you want to control the creation of a 
+new object (class in our case), and __init__ should be implemented when you want to control the initialization of 
+the new object after it has been created.
+
+class MyMeta(type):
+    def __new__(meta, name, bases, dct):
+        print('-----------------------------------')
+        print("Allocating memory for class", name)
+        print(meta)
+        print(bases)
+        print(dct)
+        return super(MyMeta, meta).__new__(meta, name, bases, dct)
+    def __init__(cls, name, bases, dct):
+        print('-----------------------------------')
+        print("Initializing class", name)
+        print(cls)
+        print(bases)
+        print(dct)
+        super(MyMeta, cls).__init__(name, bases, dct)
+        
+class MyKlass(object):
+    __metaclass__ = MyMeta
+
+    def foo(self, param):
+        pass
+
+    barattr = 2
+
+Ex 3 : Major difference between metaclasses and decorator is we need to mention the decorator on top of each class.
+but while metaclass automatically inherit by all the classes.
+
+In below example even when the classes are inherited we need to specify the decorator for each class.
+
+@debug1
+class Foo():
+  pass
+@debug1
+class Bar(Foo):
+  pass
+
+Solution to above issue is metaclass. Now bar will automatically call the metaclass.
+
+class Foo(metaclass=debugmeta):
+  pass
+class Bar(Foo):
+
+debug1 metaclass has code like 
+
+class debugmeta():
+  def __new__(cls,clsname,bases,clsdict):
+    clsobj = super().__new__(cls,clsname,bases,clsdict)
+    clsobj = debug1(clsobj)                             ## Class decorator
+    return clsobj
+
+
