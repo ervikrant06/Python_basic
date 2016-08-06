@@ -29,3 +29,48 @@ price 3
 name 1
 shares 2
 price 3
+
+
+Ex 1 : Taking fields from class and values at instance creation time. 
+
+class Structure:
+  _fields = []
+  ''' fields will take a list from class attributes '''
+  def __init__(self,*args):
+    ''' args will take parameters during instance initialization '''
+    if len(args) != self._fields:
+      raise TypeError('Wrong args')
+    for name,value in zip(self._fields, args):
+      ''' setting attribute by taking fields and instance initialization values '''
+      setattr(self,name,value)
+
+class Students(Structure):
+  ''' Inherited class '''
+  _fields = ['name','rollnumber','class']
+
+class Teacher(Structure):
+  _fields = ['name','salary']
+  
+## Problem with above approach, it doesn't care about the number of arguments and we can't pass key word arguments. 
+## Solution is to use signature in parent class to get rid of these issues.
+
+from inspect import Parameter, Signature
+
+def make_signature(names):
+  return Signature(Parameter(name, Parameter.POSITIONAL_OR_KEYWORD)  for name in names)
+
+class Structure:
+  __signature__ = make_signature([])
+  def __init__(self, *args, **kwargs):
+    bound = self.__signature__.bind(*args,**kwargs)
+    for name,val in bound.arguments.items():
+      setattr(self,name,val)
+
+class Students(Structure):
+  ''' Inherited class '''
+  __signature__ = make_signature(['name','rollnumber','class'])
+  
+class Teacher(Structure):
+  __signature__ = make_signature(['name','salary'])
+      
+      
