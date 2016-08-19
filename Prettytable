@@ -1,0 +1,35 @@
+Filesystem      Size  Used Avail Use% Mounted
+devtmpfs        236M     0  236M   0% /dev
+tmpfs           245M     0  245M   0% /dev/shm
+tmpfs           245M  396K  245M   1% /run
+tmpfs           245M     0  245M   0% /sys/fs/cgroup
+/dev/vda1        40G  2.4G   35G   7% /
+tmpfs            49M     0   49M   0% /run/user/1001
+
+
+filename = open('/tmp/test1.txt','r')
+lines = [line.rstrip('\n').split() for line in filename]
+x.field_names = [item for item in lines[0][:-1]]
+for i in range(1,len(lines)):
+    x.add_row([item for item in lines[i]])
+x.align["Filesystem"] = "l"
+x.align["Mounted"] = "l"
+x.align["Size"] = "r"
+x.align["Used"] = "r"
+x.align["Avail"] = "r"
+print(x.get_string())
+
+
+Output : 
+
+$ python pretty1.py 
++------------+------+------+-------+------+----------------+
+| Filesystem | Size | Used | Avail | Use% | Mounted        |
++------------+------+------+-------+------+----------------+
+| devtmpfs   | 236M |    0 |  236M |  0%  | /dev           |
+| tmpfs      | 245M |    0 |  245M |  0%  | /dev/shm       |
+| tmpfs      | 245M | 396K |  245M |  1%  | /run           |
+| tmpfs      | 245M |    0 |  245M |  0%  | /sys/fs/cgroup |
+| /dev/vda1  |  40G | 2.4G |   35G |  7%  | /              |
+| tmpfs      |  49M |    0 |   49M |  0%  | /run/user/1001 |
++------------+------+------+-------+------+----------------+
