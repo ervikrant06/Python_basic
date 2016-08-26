@@ -1,0 +1,29 @@
+import json
+from datetime import datetime
+import time
+json_data=open('/home/vagrant/PARSING/ceilometer_mysetup_1.json').read()
+data=json.loads(json_data)
+instanceid='2be981df-ae47-4a1a-aefc-d6e35e477052'
+converted_poweron_time = []
+converted_poweroff_time = []
+sum = 0
+def conversion(gottime):
+    '''function to convert time into seconds'''
+    tuple_time = datetime.strptime(gottime, "%Y-%m-%dT%H:%M:%S.%f")
+    return(time.mktime(tuple_time.timetuple()))
+    
+for i in reversed(range(len(data))):
+    if (data[i]['resource_metadata']['instance_id']) == instanceid:
+        print(data[i]['resource_metadata']['event_type'], data[i]['recorded_at'])
+        if (data[i]['resource_metadata']['event_type']) == "compute.instance.power_on.end":
+            converted_poweron_time.append(conversion(data[i]['recorded_at']))
+        if (data[i]['resource_metadata']['event_type']) == "compute.instance.power_off.end":
+            converted_poweroff_time.append(conversion(data[i]['recorded_at']))
+ans = [x1 - x2 for (x1,x2) in zip(converted_poweron_time,converted_poweroff_time)]
+for i in ans:
+    print i
+    sum += i
+if [converted_poweron_time[-1] > converted_poweroff_time[-1]]:
+    epoch_time = (int(time.time()) - converted_poweron_time[-1])
+print("Total time of running in seconds : ", sum + epoch_time)
+            #print("Time of running {}".format(eachvalue_inpoweron - eachvalue_inpoweron))
