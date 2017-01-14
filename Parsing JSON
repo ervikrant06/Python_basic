@@ -17,7 +17,7 @@ for index,value in enumerate(sorted(data['nodes'][0].keys())):
 
 ## Getting the input from Customer.
 
-inputvalues=raw_input("Enter the comma separated numeric values: ")
+inputvalues=raw_input("Enter the comma separated numeric values. ")
 
 ## Print the output as per user input.
 
@@ -39,4 +39,14 @@ def show(inputlist):
 
 ## Splitting the comma separated userinput into a list and calling show function.
 
-show(inputvalues.split(','))
+def input_validation():
+  for each_input_number in inputvalues.split(','):
+      assert(int(each_input_number) >= 0)
+      try:
+        if (len(sorted(data['nodes'][0].keys()))-1) > each_input_number:
+          break
+      except ValueError:
+          pass
+  show(inputvalues.split(','))
+
+input_validation()
