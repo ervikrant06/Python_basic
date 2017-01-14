@@ -2,7 +2,8 @@ from __future__ import print_function
 import json
 import sys
 import enum
-import prettytable
+from prettytable import PrettyTable
+x=PrettyTable()
 
 ## Reading file as command argument
 
@@ -18,16 +19,17 @@ for index,value in enumerate(sorted(data['nodes'][0].keys())):
 
 inputvalues=raw_input("Enter the comma separated numeric values: ")
 
-def display(inputlistarguments):
-    for i in range(0,len(data['nodes'])):
-      for eachargument in inputlistarguments:
-          if type(data['nodes'][i][eachargument]) == list:
-            print(data['nodes'][i][eachargument][0], end=" ")
-          else:
-            print(data['nodes'][i][eachargument], end=" ")
-      print()
+## Print the output as per user input.
 
-## Function to print the information as per user input.
+def display(inputlistarguments):
+    x.field_names=inputlistarguments
+    for i in range(0,len(data['nodes'])):
+      x.add_row([data['nodes'][i][eachargument] \
+                if type(data['nodes'][i][eachargument]) != list else data['nodes'][i][eachargument][0] \
+                for eachargument in inputlistarguments])
+    print(x.get_string())
+
+## Call display fun. as per user input
 
 def show(inputlist):
     parameter=[]
