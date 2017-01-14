@@ -1,8 +1,40 @@
+from __future__ import print_function
 import json
 import sys
-from pprint import pprint
+import enum
+import prettytable
+
+## Reading file as command argument
 
 with open(sys.argv[1]) as data_file:
-  data = json.load(data_file)
-for i in range(0,len(data['nodes'])):
-  print(data['nodes'][i]['capabilities'].encode("ascii"), data['nodes'][i]['mac'][0].encode("ascii"))
+    data = json.load(data_file)
+
+## Printing the menu for Customer.
+
+for index,value in enumerate(sorted(data['nodes'][0].keys())):
+    print(index,value.encode("ascii"))
+
+## Getting the input from Customer.
+
+inputvalues=raw_input("Enter the comma separated numeric values: ")
+
+def display(inputlistarguments):
+    for i in range(0,len(data['nodes'])):
+      for eachargument in inputlistarguments:
+          if type(data['nodes'][i][eachargument]) == list:
+            print(data['nodes'][i][eachargument][0], end=" ")
+          else:
+            print(data['nodes'][i][eachargument], end=" ")
+      print()
+
+## Function to print the information as per user input.
+
+def show(inputlist):
+    parameter=[]
+    for eachvalue in inputlist:
+      parameter.append(sorted((data['nodes'][0].keys()))[int(eachvalue)])
+    display(parameter)
+
+## Splitting the comma separated userinput into a list and calling show function.
+
+show(inputvalues.split(','))
