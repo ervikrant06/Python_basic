@@ -27,6 +27,9 @@ def display(inputlistarguments):
         print(data[options[inputlistarguments]])
 
 def extra_options_print(input_main_key,input_sub_key):
+    '''
+    main menu "extra", sub-menu options to print the pretty tables accordingly.
+    '''
     if input_sub_key == 'cpu':
         x.field_names=cpu_list
         for keys in data[input_main_key][input_sub_key].keys():
@@ -71,6 +74,10 @@ def extra_options_print(input_main_key,input_sub_key):
         print(x.get_string())
 
 def inventory_options_print(input_main_key,input_sub_key):
+    '''
+    main menu "inventory", sub-options to print the pretty table and raw
+    values.
+    '''
     if type(data[input_main_key][input_sub_key]) == list:
         x.field_names=data[input_main_key][input_sub_key][0].keys()
         for eachelement in data[input_main_key][input_sub_key]:
@@ -85,6 +92,9 @@ def inventory_options_print(input_main_key,input_sub_key):
         print(data[input_main_key][input_sub_key])
 
 def another_menu(input_values1):
+    '''
+    Print sub-menu for main menu "inventory" and "extra" options.
+    '''
     extra_options=dict()
     for index_extra,value_extra in enumerate(sorted(data[input_values1].keys()),1):
         extra_options[index_extra]=value_extra
@@ -95,12 +105,18 @@ def another_menu(input_values1):
         extra_options_print(input_values1,extra_options[int(input("Enter one numeric value: "))])
 
 def check(input_values):
+    '''
+    Checking whether user chosen "extra" and "inventory" from main menu.
+    '''
     if (options[input_values] == 'extra' or options[input_values] == 'inventory'):
         another_menu(options[input_values])
     else:
         display(input_values)
 
 def input_validation():
+    '''
+    Choose main menu option.
+    '''
     inputvalues=str(input("Enter one numeric value: "))
     #if set(inputvalues).issubset(set(options.keys())):
     check(int(inputvalues))
