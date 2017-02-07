@@ -1,7 +1,6 @@
 from __future__ import print_function
 import json
 import sys
-import enum
 from prettytable import PrettyTable
 x=PrettyTable()
 
@@ -9,44 +8,41 @@ x=PrettyTable()
 
 with open(sys.argv[1]) as data_file:
     data = json.load(data_file)
-
-## Printing the menu for Customer.
-
-for index,value in enumerate(sorted(data['nodes'][0].keys())):
-    print(index,value.encode("ascii"))
-
-## Getting the input from Customer.
-
-inputvalues=raw_input("Enter the comma separated numeric values. ")
-
-## Print the output as per user input.
+    options = dict()
+    for index, value in enumerate(sorted(data['nodes'][0].keys()), 1):
+        options[index] = value
+        print("{0}: {1}".format(index,value))
 
 def display(inputlistarguments):
+    '''
+    Print the output as per user input selection.
+    '''
     x.field_names=inputlistarguments
-    for i in range(0,len(data['nodes'])):
+    for i in range(0, len(data['nodes'])):
       x.add_row([data['nodes'][i][eachargument] \
-                if type(data['nodes'][i][eachargument]) != list else data['nodes'][i][eachargument][0] \
-                for eachargument in inputlistarguments])
+                 if type(data['nodes'][i][eachargument]) != list else data['nodes'][i][eachargument][0] \
+                 for eachargument in inputlistarguments])
     print(x.get_string())
 
-## Call display fun. as per user input
-
 def show(inputlist):
+    '''
+    Map the input selection to dictionary keys.
+    '''
     parameter=[]
     for eachvalue in inputlist:
-      parameter.append(sorted((data['nodes'][0].keys()))[int(eachvalue)])
+      parameter.append(options[eachvalue])
     display(parameter)
 
-## Splitting the comma separated userinput into a list and calling show function.
-
 def input_validation():
-  for each_input_number in inputvalues.split(','):
-      assert(int(each_input_number) >= 0)
-      try:
-        if (len(sorted(data['nodes'][0].keys()))-1) > each_input_number:
-          break
-      except ValueError:
-          pass
-  show(inputvalues.split(','))
+    '''
+    Get the input from user in comma separated format. Using map to conver the
+    map to integer. Check whether entered input is from dictionary keys.
+    '''
+    inputvalues=str(input("Enter the comma separated numeric values. "))
+    inputvalues = list(map(int, inputvalues.split(',')))
+    if set(inputvalues).issubset(set(options.keys())):
+        show(inputvalues)
+    else:
+        raise('One or more imput values are invalid')
 
 input_validation()
